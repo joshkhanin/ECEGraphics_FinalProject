@@ -206,9 +206,12 @@ class camera {
         if (world.hit(r, interval(0.001, infinity), rec)) {
             ray scattered;
             color attenuation;
-            if (rec.mat->scatter(r, rec, attenuation, scattered))
-                return attenuation * ray_color(scattered, depth-1, world);
-            return color(0,0,0);
+            color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
+            if (rec.mat->scatter(r, rec, attenuation, scattered)) {
+                color color_from_scatter = attenuation * ray_color(scattered, depth-1, world);
+                return color_from_emission + color_from_scatter;
+            }
+            return color_from_emission;
         }
 
         vec3 unit_direction = unit_vector(r.direction());

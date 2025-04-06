@@ -48,6 +48,8 @@ class sphere : public hittable {
         return true;
     }
 
+    // TODO: Add function static void get_sphere_uv(const point3& p, double& u, double& v);
+
   private:
     point3 center;
     double radius;
