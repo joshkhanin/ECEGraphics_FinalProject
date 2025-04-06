@@ -86,8 +86,7 @@ void build_simple_world(hittable_list &world) {
     auto material1 = make_shared<dielectric>(1.5);
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
 
-    // auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
-    auto material2 = make_shared<diffuse_light>(color(10.0, 10.0, 10.0));
+    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
     world.add(make_shared<sphere>(point3(-1, 1, -3), 1.0, material2));
 
     auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
