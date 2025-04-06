@@ -152,6 +152,9 @@ void build_earth_system(hittable_list &world) {
     auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, earth_material));
 
+    auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
+    world.add(make_shared<sphere>(point3(0, 0.5, 3.0), 1.0, sun_material));
+
     cout << "Built earth system: " << world.objects.size() << " objects\n";
 }
 
