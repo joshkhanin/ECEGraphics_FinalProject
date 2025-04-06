@@ -98,6 +98,8 @@ void build_simple_world(hittable_list &world) {
     auto sphere_material = make_shared<lambertian>(albedo);
     world.add(make_shared<sphere>(point3(4.5, 0.3, 1.0), 0.6, sphere_material));
 
+    //world.add(make_shared<sphere>(point3(1, 1, -2), 0.5, material3));
+
     cout << "Built world: " << world.objects.size() << " objects\n";
 }
 
@@ -140,7 +142,17 @@ void build_world(hittable_list &world, int min_coord, int max_coord) {
 
     auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
     world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+
     cout << "Built world: " << world.objects.size() << " objects\n";
+}
+
+void build_earth_system(hittable_list &world) {
+
+    // Earth system
+    auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
+    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, earth_material));
+
+    cout << "Built earth system: " << world.objects.size() << " objects\n";
 }
 
 // Write raw RGBA frames to FFmpeg pipe
@@ -210,6 +222,9 @@ void render(const char conffile[]) {
         case 1:
             build_world(world, min_coord, max_coord);
             break;
+        case 2:
+            build_earth_system(world);
+            break;
         default:
             cerr << "Invalid world number\n";
             return;
@@ -277,7 +292,7 @@ void render(const char conffile[]) {
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        render("raytrace.conf");
+        render("test1.conf");
         return 0;
     }
     for (int i = 1; i < argc; i++) {
