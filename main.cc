@@ -149,11 +149,12 @@ void build_world(hittable_list &world, int min_coord, int max_coord) {
 void build_earth_system(hittable_list &world) {
 
     // Earth system
+    // auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
     auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, earth_material));
 
     auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
-    world.add(make_shared<sphere>(point3(0, 0.5, 3.0), 1.0, sun_material));
+    world.add(make_shared<sphere>(point3(3.0, 0.5, 3.0), 1.0, sun_material));
 
     cout << "Built earth system: " << world.objects.size() << " objects\n";
 }
@@ -281,7 +282,7 @@ void render(const char conffile[]) {
         cam.vup = vup0 + f * delta_vup;
         cam.render(world, rgba_buffer, filename, frame);
         if (frame == 0) {
-            write_webp(filename.c_str(), rgba_buffer, cam.image_width, cam.image_height);
+            write_webp((filename+".webp").c_str(), rgba_buffer, cam.image_width, cam.image_height);
         }
         if (num_frames > 1) {
             write_frame(pipe, (uint8_t*)rgba_buffer, frame_size);
