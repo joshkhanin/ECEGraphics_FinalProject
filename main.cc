@@ -146,17 +146,25 @@ void build_world(hittable_list &world, int min_coord, int max_coord) {
     cout << "Built world: " << world.objects.size() << " objects\n";
 }
 
+float x = 0.0;
+float y = 0.5;
+float z = 0.0;
+float angle = 0.0;
+
 void build_earth_system(hittable_list &world) {
 
     // Earth system
     // auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
     auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
-    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, earth_material));
+    world.add(make_shared<sphere>(point3(x, y, z), 0.5, earth_material));
+    x = (8.0 * cos(degrees_to_radians(angle)));
+    z = (8.0 * sin(degrees_to_radians(angle)));
+    angle += 1.0;
 
     auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
-    world.add(make_shared<sphere>(point3(3.0, 0.5, 3.0), 1.0, sun_material));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
 
-    cout << "Built earth system: " << world.objects.size() << " objects\n";
+    //cout << "Built earth system: " << world.objects.size() << " objects\n";
 }
 
 // Write raw RGBA frames to FFmpeg pipe
@@ -281,6 +289,8 @@ void render(const char conffile[]) {
         cam.lookat = lookat0 + f * delta_lookat;
         cam.vup = vup0 + f * delta_vup;
         cam.render(world, rgba_buffer, filename, frame);
+        world.clear();
+        build_earth_system(world);
         if (frame == 0) {
             write_webp((filename+".webp").c_str(), rgba_buffer, cam.image_width, cam.image_height);
         }
