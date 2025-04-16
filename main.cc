@@ -146,17 +146,36 @@ void build_world(hittable_list &world, int min_coord, int max_coord) {
     cout << "Built world: " << world.objects.size() << " objects\n";
 }
 
+float earth_x = 0.0;
+float earth_y = 0.0;
+float earth_z = 0.0;
+float earth_angle = 0.0;
+
+float moon_x = 0.0;
+float moon_y = 0.0;
+float moon_z = 0.0;
+float moon_angle = 90.0;
+
 void build_earth_system(hittable_list &world) {
 
     // Earth system
     // auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
     auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
-    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, earth_material));
+    earth_x = (8.0 * cos(degrees_to_radians(earth_angle)));
+    earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
+    earth_angle += 1.0;
+    world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, earth_material));
 
     auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
-    world.add(make_shared<sphere>(point3(3.0, 0.5, 3.0), 1.0, sun_material));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
 
-    cout << "Built earth system: " << world.objects.size() << " objects\n";
+    auto moon_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    moon_x = (2.0 * cos(degrees_to_radians(moon_angle))) + earth_x;
+    moon_z = (2.0 * sin(degrees_to_radians(moon_angle))) + earth_z;
+    moon_angle += 24.0;
+    world.add(make_shared<sphere>(point3(moon_x, moon_y, moon_z), 0.2, moon_material));
+
+    //cout << "Built earth system: " << world.objects.size() << " objects\n";
 }
 
 // Write raw RGBA frames to FFmpeg pipe
@@ -281,6 +300,8 @@ void render(const char conffile[]) {
         cam.lookat = lookat0 + f * delta_lookat;
         cam.vup = vup0 + f * delta_vup;
         cam.render(world, rgba_buffer, filename, frame);
+        world.clear();
+        build_earth_system(world);
         if (frame == 0) {
             write_webp((filename+".webp").c_str(), rgba_buffer, cam.image_width, cam.image_height);
         }
