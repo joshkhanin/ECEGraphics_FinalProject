@@ -124,5 +124,10 @@ class diffuse_light : public material {
     color light;
 };
 
+// TODO: Add an Earth material, which will store multiple textures:
+//    - Albedo
+//    - Reflectivity
+//    - Night lighting
+
 
 #endif

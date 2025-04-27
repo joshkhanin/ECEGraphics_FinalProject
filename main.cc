@@ -161,7 +161,8 @@ void build_earth_system(hittable_list &world) {
 
     // Earth system
     // auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
-    auto earthTexture = make_shared<checker_texture>(0.25, color(0.1, 0.1, 0.5), color(0.1, 0.5, 0.1));
+    // auto earthTexture = make_shared<checker_texture>(0.1, color(0.1, 0.1, 0.5), color(0.1, 0.5, 0.1));
+    auto earthTexture = make_shared<image_texture>("earthmap.jpg");
     auto earth_material = make_shared<lambertian>(earthTexture);
     earth_x = (8.0 * cos(degrees_to_radians(earth_angle)));
     earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
