@@ -20,6 +20,7 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "material.h"
+#include "texture.h"
 #include "sphere.h"
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
