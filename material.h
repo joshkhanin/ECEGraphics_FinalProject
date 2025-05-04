@@ -116,12 +116,14 @@ class dielectric : public material {
 class diffuse_light : public material {
   public:
     diffuse_light(const color& light) : light(light) {}
+    diffuse_light(shared_ptr<texture> tex) : tex(tex) {}
     color emitted(double u, double v, const point3& p) const override {
-          // return tex->value(u, v, p);
-          return light;
+          return tex->value(u, v, p);
+          //return light;
     }
   private:
     color light;
+    shared_ptr<texture> tex;
 };
 
 // TODO: Add an Earth material, which will store multiple textures:
