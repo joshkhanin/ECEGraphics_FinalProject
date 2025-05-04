@@ -157,25 +157,27 @@ float moon_y = 0.0;
 float moon_z = 0.0;
 float moon_angle = 90.0;
 
+auto earthTexture = make_shared<image_texture>("earthmap.jpg");
+auto earth_material = make_shared<lambertian>(earthTexture);
+auto sunTexture = make_shared<image_texture>("sunmap.jpg");
+auto sun_material = make_shared<diffuse_light>(sunTexture);
+auto moonTexture = make_shared<image_texture>("moonmap.jpg");
+auto moon_material = make_shared<lambertian>(moonTexture);
+
 void build_earth_system(hittable_list &world) {
 
     // Earth system
     // auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
     // auto earthTexture = make_shared<checker_texture>(0.1, color(0.1, 0.1, 0.5), color(0.1, 0.5, 0.1));
-    auto earthTexture = make_shared<image_texture>("earthmap.jpg");
-    auto earth_material = make_shared<lambertian>(earthTexture);
+    
     earth_x = (8.0 * cos(degrees_to_radians(earth_angle)));
     earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
     earth_angle += 1.0;
     world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, earth_material));
-
-    auto sunTexture = make_shared<image_texture>("sunmap.jpg");
-    auto sun_material = make_shared<diffuse_light>(sunTexture);
+    
     //auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
     world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
 
-    auto moonTexture = make_shared<image_texture>("moonmap.jpg");
-    auto moon_material = make_shared<lambertian>(moonTexture);
     moon_x = (2.0 * cos(degrees_to_radians(moon_angle))) + earth_x;
     moon_z = (2.0 * sin(degrees_to_radians(moon_angle))) + earth_z;
     moon_angle += 24.0;
