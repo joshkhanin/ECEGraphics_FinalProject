@@ -215,7 +215,7 @@ class camera {
         }
 
         // Background color
-        // return color(0.0, 0.0, 0.0);
+        return color(0.0, 0.0, 0.0);
 
         vec3 unit_direction = unit_vector(r.direction());
         auto a = 0.5*(unit_direction.y() + 1.0);
