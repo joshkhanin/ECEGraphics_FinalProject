@@ -173,7 +173,7 @@ void build_earth_system(hittable_list &world) {
     earth_x = (8.0 * cos(degrees_to_radians(earth_angle)));
     earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
     earth_angle += 1.0;
-    world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, earth_material));
+    world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, vec3(0, 0, 0), earth_angle, earth_material));
     
     //auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
     world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
