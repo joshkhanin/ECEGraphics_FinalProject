@@ -13,11 +13,21 @@
 
 #include "hittable.h"
 
-
 class sphere : public hittable {
   public:
     sphere(const point3& center, double radius, shared_ptr<material> mat)
       : center(center), radius(std::fmax(0,radius)), mat(mat) {}
+
+    sphere(const point3& center, double radius, const vec3& axis, double angle, shared_ptr<material> mat)
+      : center(center), radius(std::fmax(0,radius)), axis(axis), angle(angle), mat(mat) {}
+
+    void set_axis(const vec3& axis) {
+      this->axis = axis;
+    }
+
+    void set_angle(double angle) {
+      this->angle = angle;
+    }
 
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
         vec3 oc = center - r.origin();
@@ -43,7 +53,10 @@ class sphere : public hittable {
         rec.p = r.at(rec.t);
         vec3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
-        get_sphere_uv(outward_normal, rec.u, rec.v);
+        vec3 texture_normal = outward_normal * std::cos(angle) + 
+                              cross(axis, outward_normal) * std::sin(angle) +
+                              axis * (dot(axis, outward_normal)) * (1 - std::cos(angle));
+        get_sphere_uv(texture_normal, rec.u, rec.v);
         rec.mat = mat;
 
         return true;
@@ -65,6 +78,8 @@ class sphere : public hittable {
     point3 center;
     double radius;
     shared_ptr<material> mat;
+    vec3 axis;
+    double angle; // in radians
 };
 
 
