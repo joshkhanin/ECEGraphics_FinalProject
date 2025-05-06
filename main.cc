@@ -169,14 +169,16 @@ void build_earth_system(hittable_list &world) {
     earth_x = (8.0 * cos(degrees_to_radians(earth_angle)));
     earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
     world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, vec3(0, 1, 0), degrees_to_radians(earth_angle), earth_material));
-    earth_angle += 1.0;
+    //earth_angle += 1.0;
+    earth_angle += 0.1;
     
     world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
 
     moon_x = (2.0 * cos(degrees_to_radians(moon_angle))) + earth_x;
     moon_z = (2.0 * sin(degrees_to_radians(moon_angle))) + earth_z;
     world.add(make_shared<sphere>(point3(moon_x, moon_y, moon_z), 0.1, moon_material));
-    moon_angle += 24.0;
+    //moon_angle += 24.0;
+    moon_angle += 2.4;
 
 }
 
@@ -298,7 +300,7 @@ void render(const char conffile[]) {
     uint32_t* rgba_buffer = new uint32_t[cam.image_width * cam.image_height];
     for (int frame = 0; frame < num_frames; frame++) {
         float f = frame * per_frame;
-        cam.lookfrom = vec3(earth_x - 0.5, earth_y, earth_z - 0.5);
+        cam.lookfrom = vec3(earth_x, earth_y, earth_z) + 0.5 * vec3(moon_x - earth_x, moon_y - earth_y, moon_z - earth_z);
         //cam.lookfrom = vec3(0.0, 0.0, 0.0);
         //cam.lookfrom = lookfrom0 + f * delta_lookfrom;
         cam.lookat = vec3(moon_x, moon_y, moon_z);
