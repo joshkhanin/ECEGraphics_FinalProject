@@ -157,8 +157,9 @@ float moon_y = 0.0;
 float moon_z = 0.0;
 float moon_angle = 90.0;
 
-auto earthTexture = make_shared<image_texture>("earthmap.jpg");
-auto earth_material = make_shared<lambertian>(earthTexture);
+auto earthAlbedo = make_shared<image_texture>("earthmap.jpg");
+auto earthSpecular = make_shared<image_texture>("earthspec.jpg");
+auto earth_material = make_shared<lambertian>(earthAlbedo);
 auto sunTexture = make_shared<image_texture>("sunmap.jpg");
 auto sun_material = make_shared<diffuse_light>(sunTexture);
 auto moonTexture = make_shared<image_texture>("moonmap.jpg");

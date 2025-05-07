@@ -51,7 +51,6 @@ class lambertian : public material {
     }
 
   private:
-    color albedo;
     shared_ptr<texture> tex;
 };
 
@@ -125,6 +124,29 @@ class diffuse_light : public material {
     color light;
     shared_ptr<texture> tex;
 };
+
+class earth_mat : public material {
+  public:
+    earth_mat(shared_ptr<texture> albedo, shared_ptr<texture> specular) : albedo(albedo), specular(specular) {}
+
+    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
+    const override {
+        // TODO: Adjust scatter direction based on albedo texture
+        auto scatter_direction = rec.normal + random_unit_vector();
+
+        // Catch degenerate scatter direction
+        if (scatter_direction.near_zero())
+            scatter_direction = rec.normal;
+
+        scattered = ray(rec.p, scatter_direction);
+        // attenuation = albedo;
+        attenuation = albedo->value(rec.u, rec.v, rec.p);
+        return true;
+    }
+  private:
+    shared_ptr<texture> albedo;
+    shared_ptr<texture> specular;
+}
 
 // TODO: Add an Earth material, which will store multiple textures:
 //    - Albedo
