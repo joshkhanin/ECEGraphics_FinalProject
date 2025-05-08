@@ -155,12 +155,14 @@ float earth_angle = 0.0;
 float moon_x = 0.0;
 float moon_y = 0.0;
 float moon_z = 0.0;
-float moon_angle = 90.0;
+float moon_angle = 180.0;
 
 auto earthAlbedo = make_shared<image_texture>("earthmap.jpg");
+//auto earthAlbedo = make_shared<checker_texture>(0.1, color(0.1, 0.1, 0.5), color(0.1, 0.5, 0.1));
 auto earthSpecular = make_shared<image_texture>("earthspec.jpg");
 auto earth_material = make_shared<lambertian>(earthAlbedo);
 auto sunTexture = make_shared<image_texture>("sunmap.jpg");
+//auto sun_material = make_shared<diffuse_light>(color(255.0, 255.0, 255.0), 1.0);
 auto sun_material = make_shared<diffuse_light>(sunTexture, 10.0);
 auto moonTexture = make_shared<image_texture>("moonmap.jpg");
 auto moon_material = make_shared<lambertian>(moonTexture);
@@ -171,24 +173,23 @@ void build_earth_system(hittable_list &world) {
     // auto earth_material = make_shared<lambertian>(color(0.1, 0.1, 0.5));
     // auto earthTexture = make_shared<checker_texture>(0.1, color(0.1, 0.1, 0.5), color(0.1, 0.5, 0.1));
     
-    earth_x = (8.0 * cos(degrees_to_radians(earth_angle)));
-    earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
-    earth_angle += 1.0;
+    earth_x = (120.0 * cos(degrees_to_radians(earth_angle)));
+    earth_z = (120.0 * sin(degrees_to_radians(earth_angle)));
     world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, vec3(0, 1, 0), degrees_to_radians(earth_angle), earth_material));
-    earth_angle += 1.0;
+    //earth_angle += 1.0;
     //earth_angle += 0.1;
     
     //auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 50.0, sun_material));
 
-    moon_x = (2.0 * cos(degrees_to_radians(moon_angle))) + earth_x;
-    moon_z = (2.0 * sin(degrees_to_radians(moon_angle))) + earth_z;
-    moon_angle += 24.0;
-    world.add(make_shared<sphere>(point3(moon_x, moon_y, moon_z), 0.1, moon_material));
-    moon_angle += 12.0;
+    moon_x = (0.5 * cos(degrees_to_radians(moon_angle))) + earth_x;
+    moon_z = (0.5 * sin(degrees_to_radians(moon_angle))) + earth_z;
+    //world.add(make_shared<sphere>(point3(moon_x, moon_y, moon_z), 0.6, moon_material));
+    world.add(make_shared<sphere>(point3(moon_x, moon_y, moon_z), 0.016, moon_material));
+    moon_angle += 6.0;
     //moon_angle += 0.08;
 
-    //cout << "Built earth system: " << world.objects.size() << " objects\n";
+    //cout << "Built earth system: " << world.objects.size() << " objects\n"; 
 }
 
 // Write raw RGBA frames to FFmpeg pipe
@@ -309,8 +310,9 @@ void render(const char conffile[]) {
     uint32_t* rgba_buffer = new uint32_t[cam.image_width * cam.image_height];
     for (int frame = 0; frame < num_frames; frame++) {
         float f = frame * per_frame;
-        cam.lookfrom = vec3(earth_x, earth_y, earth_z) + 0.5 * vec3(moon_x - earth_x, moon_y - earth_y, moon_z - earth_z);
-        cam.lookat = vec3(moon_x, moon_y, moon_z);
+        cam.lookfrom = vec3(earth_x, earth_y, earth_z) + 0.55 * vec3(moon_x - earth_x, moon_y - earth_y, moon_z - earth_z);
+        //cam.lookat = vec3(moon_x, moon_y, moon_z);
+        cam.lookat = vec3(earth_x, earth_y, earth_z);
         cam.vup = vup0 + f * delta_vup;
         cam.render(world, rgba_buffer, filename, frame);
         world.clear();
