@@ -14,6 +14,7 @@
 #include <limits>
 #include <memory>
 #include <cstdint>
+#include <random>
 
 // C++ Std Usings
 
@@ -41,6 +42,12 @@ inline double random_double() {
 inline double random_double(double min, double max) {
     // Returns a random real in [min,max).
     return min + (max-min)*random_double();
+}
+
+inline double random_gaussian(double stdev) {
+    auto U1 = random_double(); auto U2 = random_double();
+    auto R = stdev * sqrt(-2 * log(U1)); auto theta = 2 * pi * U2;
+    return R * sin(theta);
 }
 
 

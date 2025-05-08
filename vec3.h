@@ -123,6 +123,22 @@ inline vec3 random_in_unit_disk() {
     }
 }
 
+// inline vec3 gaussian_in_unit_disk(double stdev) {
+//     /* Box-Muller transform creates a independent identically distributed Gaussians */
+//     auto U1 = random_double(); auto U2 = random_double();
+//     auto R = stdev * sqrt(-2 * log(U1)); auto theta = 2 * pi * U2;
+
+//     auto Z0 = R * sin(theta); auto Z1 = R * cos(theta);
+
+//     /* Need a way to do the distribution as a disk normal to a vector */
+//     // Equation of a n-1 dim subspace: a.T @ x = 0
+//     // a is normal vector
+// }
+
+inline vec3 random_gaussian_vector(double stdev) {
+    return vec3(random_gaussian(stdev), random_gaussian(stdev), random_gaussian(stdev));
+}
+
 inline vec3 random_unit_vector() {
     while (true) {
         auto p = vec3::random(-1,1);

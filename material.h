@@ -129,10 +129,15 @@ class earth_mat : public material {
 
     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
     const override {
+        /* Create a normal vector perturbed according to the nature of ocean waves */
+        auto gaussian_vec = random_gaussian_vector(1.0);
+        auto squished_vec = gaussian_vec - dot(gaussian_vec, rec.normal) * gaussian_vec;
+        auto perturbed_normal = unit_vector(squished_vec + rec.normal);
+        
         // TODO: Adjust scatter direction based on albedo texture
-        auto scatter_direction = rec.normal + random_unit_vector();
+        // auto scatter_direction = perturbed_normal + random_unit_vector();
+        auto scatter_direction = unit_vector(reflect(r_in.direction(), perturbed_normal));
 
-        /* Sample a normally distributed vector n */
 
         // Catch degenerate scatter direction
         if (scatter_direction.near_zero())
@@ -141,12 +146,13 @@ class earth_mat : public material {
         scattered = ray(rec.p, scatter_direction);
         // attenuation = albedo;
         attenuation = albedo->value(rec.u, rec.v, rec.p);
-        return true;
+        return (dot(scattered.direction(), rec.normal) > 0);
+        // return true;
     }
   private:
     shared_ptr<texture> albedo;
     shared_ptr<texture> specular;
-}
+};
 
 // TODO: Add an Earth material, which will store multiple textures:
 //    - Albedo
