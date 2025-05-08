@@ -129,24 +129,46 @@ class earth_mat : public material {
 
     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
     const override {
-        /* Create a normal vector perturbed according to the nature of ocean waves */
-        auto gaussian_vec = random_gaussian_vector(1.0);
-        auto squished_vec = gaussian_vec - dot(gaussian_vec, rec.normal) * gaussian_vec;
-        auto perturbed_normal = unit_vector(squished_vec + rec.normal);
+        double reflect_amount = specular->value(rec.u, rec.v, rec.p).length_squared() / 9.0;
+        double sample_threshold = reflect_amount / 2;
+
+        if (random_double() < sample_threshold) {
+          /* Create a normal vector perturbed according to the nature of ocean waves */
+          auto gaussian_vec = random_gaussian_vector(0.5);
+          auto squished_vec = gaussian_vec - dot(gaussian_vec, rec.normal) * gaussian_vec;
+          auto perturbed_normal = unit_vector(squished_vec + rec.normal);
+          auto scatter_direction = unit_vector(reflect(r_in.direction(), perturbed_normal));
+          scattered = ray(rec.p, scatter_direction);
+          // attenuation = albedo;
+          attenuation = color(1.0, 1.0, 1.0) * 0.3;
+          return (dot(scattered.direction(), rec.normal) > 0);
+        } else {
+          /* Reflect according to a Lambertian */
+          auto scatter_direction = rec.normal + random_unit_vector();
+
+          // Catch degenerate scatter direction
+          if (scatter_direction.near_zero())
+              scatter_direction = rec.normal;
+
+          scattered = ray(rec.p, scatter_direction);
+          // attenuation = albedo;
+          attenuation = albedo->value(rec.u, rec.v, rec.p) * (1.0 / ((1-sample_threshold)+0.05));
+          return true;
+        }
         
         // TODO: Adjust scatter direction based on albedo texture
         // auto scatter_direction = perturbed_normal + random_unit_vector();
-        auto scatter_direction = unit_vector(reflect(r_in.direction(), perturbed_normal));
+        // auto scatter_direction = unit_vector(reflect(r_in.direction(), perturbed_normal));
 
 
-        // Catch degenerate scatter direction
-        if (scatter_direction.near_zero())
-            scatter_direction = rec.normal;
+        // // Catch degenerate scatter direction
+        // if (scatter_direction.near_zero())
+        //     scatter_direction = rec.normal;
 
-        scattered = ray(rec.p, scatter_direction);
-        // attenuation = albedo;
-        attenuation = albedo->value(rec.u, rec.v, rec.p);
-        return (dot(scattered.direction(), rec.normal) > 0);
+        // scattered = ray(rec.p, scatter_direction);
+        // // attenuation = albedo;
+        // attenuation = albedo->value(rec.u, rec.v, rec.p);
+        // return (dot(scattered.direction(), rec.normal) > 0);
         // return true;
     }
   private:
