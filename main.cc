@@ -161,7 +161,7 @@ auto earthAlbedo = make_shared<image_texture>("earthmap.jpg");
 auto earthSpecular = make_shared<image_texture>("earthspec.jpg");
 auto earth_material = make_shared<lambertian>(earthAlbedo);
 auto sunTexture = make_shared<image_texture>("sunmap.jpg");
-auto sun_material = make_shared<diffuse_light>(sunTexture);
+auto sun_material = make_shared<diffuse_light>(sunTexture, 10.0);
 auto moonTexture = make_shared<image_texture>("moonmap.jpg");
 auto moon_material = make_shared<lambertian>(moonTexture);
 
@@ -175,6 +175,8 @@ void build_earth_system(hittable_list &world) {
     earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
     earth_angle += 1.0;
     world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, vec3(0, 1, 0), degrees_to_radians(earth_angle), earth_material));
+    earth_angle += 1.0;
+    //earth_angle += 0.1;
     
     //auto sun_material = make_shared<diffuse_light>(color(100.0, 100.0, 0.0));
     world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
@@ -183,6 +185,8 @@ void build_earth_system(hittable_list &world) {
     moon_z = (2.0 * sin(degrees_to_radians(moon_angle))) + earth_z;
     moon_angle += 24.0;
     world.add(make_shared<sphere>(point3(moon_x, moon_y, moon_z), 0.1, moon_material));
+    moon_angle += 12.0;
+    //moon_angle += 0.08;
 
     //cout << "Built earth system: " << world.objects.size() << " objects\n";
 }
