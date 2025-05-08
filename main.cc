@@ -160,7 +160,7 @@ float moon_angle = 180.0;
 auto earthTexture = make_shared<image_texture>("earthmap.jpg");
 auto earth_material = make_shared<lambertian>(earthTexture);
 auto sunTexture = make_shared<image_texture>("sunmap.jpg");
-auto sun_material = make_shared<diffuse_light>(sunTexture);
+auto sun_material = make_shared<diffuse_light>(sunTexture, 10.0);
 auto moonTexture = make_shared<image_texture>("moonmap.jpg");
 auto moon_material = make_shared<lambertian>(moonTexture);
 
@@ -169,16 +169,16 @@ void build_earth_system(hittable_list &world) {
     earth_x = (8.0 * cos(degrees_to_radians(earth_angle)));
     earth_z = (8.0 * sin(degrees_to_radians(earth_angle)));
     world.add(make_shared<sphere>(point3(earth_x, earth_y, earth_z), 0.5, vec3(0, 1, 0), degrees_to_radians(earth_angle), earth_material));
-    //earth_angle += 1.0;
-    earth_angle += 0.1;
+    earth_angle += 1.0;
+    //earth_angle += 0.1;
     
     world.add(make_shared<sphere>(point3(0.0, 0.0, 0.0), 2.0, sun_material));
 
     moon_x = (2.0 * cos(degrees_to_radians(moon_angle))) + earth_x;
     moon_z = (2.0 * sin(degrees_to_radians(moon_angle))) + earth_z;
     world.add(make_shared<sphere>(point3(moon_x, moon_y, moon_z), 0.1, moon_material));
-    //moon_angle += 24.0;
-    moon_angle += 2.4;
+    moon_angle += 12.0;
+    //moon_angle += 0.08;
 
 }
 
