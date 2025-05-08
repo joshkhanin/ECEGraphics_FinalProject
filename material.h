@@ -134,6 +134,8 @@ class earth_mat : public material {
         // TODO: Adjust scatter direction based on albedo texture
         auto scatter_direction = rec.normal + random_unit_vector();
 
+        /* Sample a normally distributed vector n */
+
         // Catch degenerate scatter direction
         if (scatter_direction.near_zero())
             scatter_direction = rec.normal;
