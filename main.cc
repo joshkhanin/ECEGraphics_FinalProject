@@ -309,8 +309,8 @@ void render(const char conffile[]) {
     uint32_t* rgba_buffer = new uint32_t[cam.image_width * cam.image_height];
     for (int frame = 0; frame < num_frames; frame++) {
         float f = frame * per_frame;
-        cam.lookfrom = lookfrom0 + f * delta_lookfrom;
-        cam.lookat = lookat0 + f * delta_lookat;
+        cam.lookfrom = vec3(earth_x, earth_y, earth_z) + 0.5 * vec3(moon_x - earth_x, moon_y - earth_y, moon_z - earth_z);
+        cam.lookat = vec3(moon_x, moon_y, moon_z);
         cam.vup = vup0 + f * delta_vup;
         cam.render(world, rgba_buffer, filename, frame);
         world.clear();
